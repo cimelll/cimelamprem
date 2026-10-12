@@ -1,0 +1,34 @@
+// Vercel serverless function: /api/premium-proxy
+// Starter only. It does NOT send or verify Alight Motion activation links.
+module.exports = async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
+
+  if (req.method === "GET" && req.query && req.query.ping === "1") {
+    return res.status(200).json({
+      online: true,
+      service: "CIMELAM PREM backend",
+      activationConfigured: false
+    });
+  }
+
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "GET, POST");
+    return res.status(405).json({ success: false, message: "Method not allowed." });
+  }
+
+  // Do not log or store submitted email addresses or magic links.
+  const body = req.body || {};
+  const action = body.action;
+
+  if (action !== "send" && action !== "verify") {
+    return res.status(400).json({ success: false, message: "Action must be send or verify." });
+  }
+
+  // No official activation provider/API has been configured yet.
+  // Return an honest response instead of pretending activation succeeded.
+  return res.status(501).json({
+    success: false,
+    code: "ACTIVATION_PROVIDER_NOT_CONFIGURED",
+    message: "Backend is installed, but official activation service integration is not configured."
+  });
+};
