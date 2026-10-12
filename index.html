@@ -486,4 +486,262 @@ main{max-width:720px;margin:0 auto;padding:40px 5% 80px}
           </svg>
         </span>
         <div class="step-body">
+                    <span class="step-n">04</span>
+          <p>Kembali ke halaman ini, tempel link verifikasi ke kolom yang sama, lalu klik tombol Proses Sekarang. Selesai!</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="section-head">
+      <span class="section-tag">PERTANYAAN</span>
+      <h2 class="section-title">Yang Sering Ditanyakan</h2>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>
+          <span class="faq-ico">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9 9a4 4 0 0 1 6 0c0 1.5-2 2-2 4"/>
+              <circle cx="12" cy="17" r="1"/>
+            </svg>
+          </span>
+          <span class="faq-q">Apakah ini aman digunakan?</span>
+          <span class="faq-chev">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-a">
+          <p>Ya, 100% aman. Tidak ada data pribadi yang disimpan.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span class="faq-ico">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2v20M17 5H9a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3z"/>
+            </svg>
+          </span>
+          <span class="faq-q">Apakah benar-benar gratis?</span>
+          <span class="faq-chev">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-a">
+          <p>Ya, sepenuhnya gratis! Tidak ada biaya tersembunyi.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span class="faq-ico">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M13 2L4 14h6l-1 8 9-12h-6z"/>
+            </svg>
+          </span>
+          <span class="faq-q">Berapa lama prosesnya?</span>
+          <span class="faq-chev">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq-a">
+          <p>Seketika! Hanya butuh beberapa detik saja.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>© 2026 Cimel • AM Premium Tool • Semua proses aman dan terpercaya</p>
+</footer>
+
+<div class="toast" id="toast" hidden>
+  <span class="toast-ico">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 8v4M12 16h.01"/>
+    </svg>
+  </span>
+  <span class="toast-msg" id="toast-msg">Terjadi kesalahan. Silakan coba lagi.</span>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Intro layer
+  setTimeout(() => {
+    const intro = document.getElementById('intro-layer');
+    if(intro) intro.style.display = 'none';
+  }, 1200);
+
+  // Welcome modal
+  const modal = document.getElementById('welcome-modal');
+  const modalX = document.getElementById('modal-x');
+  const btnDismiss = document.getElementById('btn-dismiss');
+  const btnTutorial = document.getElementById('btn-read-tutorial');
+
+  setTimeout(() => {
+    modal.hidden = false;
+  }, 1500);
+
+  const closeModal = () => {
+    modal.style.opacity = '0';
+    modal.style.visibility = 'hidden';
+    setTimeout(() => modal.hidden = true, 300);
+  };
+
+  modalX.addEventListener('click', closeModal);
+  btnDismiss.addEventListener('click', closeModal);
+  btnTutorial.addEventListener('click', () => {
+    closeModal();
+    setTimeout(() => {
+      document.getElementById('tutorial').scrollIntoView({behavior:'smooth'});
+    }, 350);
+  });
+
+  // Nav toggle mobile
+  const navToggle = document.getElementById('nav-toggle');
+  const siteNav = document.getElementById('site-nav');
+  navToggle.addEventListener('click', () => {
+    const isOpen = siteNav.hasAttribute('open');
+    if(isOpen){
+      siteNav.removeAttribute('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }else{
+      siteNav.setAttribute('open', '');
+      navToggle.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+  // Nav links close menu on mobile
+  document.querySelectorAll('[data-nav]').forEach(link => {
+    link.addEventListener('click', () => {
+      if(window.innerWidth <= 640){
+        siteNav.removeAttribute('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  // Reveal steps on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('reveal');
+      }
+    });
+  }, {threshold:0.1});
+
+  document.querySelectorAll('.step').forEach(el => observer.observe(el));
+
+  // Input logic
+  const input = document.getElementById('main-input');
+  const inputAction = document.getElementById('input-action');
+  const execBtn = document.getElementById('exec-btn');
+  const responsePanel = document.getElementById('response-panel');
+  const respText = document.getElementById('resp-text');
+  const respSub = document.getElementById('resp-sub');
+  const resultPanel = document.getElementById('result-panel');
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toast-msg');
+
+  let currentStage = 0;
+
+  function updateStages(stageNum){
+    document.querySelectorAll('.stage').forEach((el, i) => {
+      el.classList.remove('active','done');
+      if(i+1 < stageNum) el.classList.add('done');
+      else if(i+1 === stageNum) el.classList.add('active');
+    });
+  }
+
+  function updateResponse(state, text, sub=''){
+    responsePanel.setAttribute('data-state', state);
+    respText.textContent = text;
+    respSub.textContent = sub;
+  }
+
+  function showToast(msg){
+    toastMsg.textContent = msg;
+    toast.hidden = false;
+    setTimeout(() => toast.hidden = true, 3500);
+  }
+
+  input.addEventListener('input', () => {
+    inputAction.setAttribute('data-mode', input.value.trim() ? 'clear' : 'clipboard');
+  });
+
+  inputAction.addEventListener('click', () => {
+    if(inputAction.getAttribute('data-mode') === 'clear'){
+      input.value = '';
+      inputAction.setAttribute('data-mode', 'clipboard');
+      updateResponse('empty', 'Silakan masukkan email atau link verifikasi di atas');
+      resultPanel.setAttribute('data-state', 'empty');
+      resultPanel.innerHTML = '<p class="result-empty">Belum ada hasil. Mulai proses di atas dulu ya!</p>';
+      currentStage = 0;
+      updateStages(0);
+    }else{
+      navigator.clipboard.readText().then(text => {
+        input.value = text;
+        input.dispatchEvent(new Event('input'));
+      }).catch(() => {});
+    }
+  });
+
+  execBtn.addEventListener('click', async () => {
+    const val = input.value.trim();
+    if(!val){
+      showToast('Silakan masukkan email atau link verifikasi terlebih dahulu');
+      return;
+    }
+
+    execBtn.setAttribute('aria-busy', 'true');
+    execBtn.disabled = true;
+
+    setTimeout(() => {
+      execBtn.setAttribute('aria-busy', 'false');
+      execBtn.disabled = false;
+
+      if(val.includes('@') && !val.startsWith('http')){
+        currentStage = 1;
+        updateStages(1);
+        updateResponse('success', 'Email terdaftar!', 'Silakan cek inbox email kamu untuk link verifikasi');
+        resultPanel.setAttribute('data-state', 'filled');
+        resultPanel.innerHTML = `
+          <h4 style="color:#2563eb;margin-bottom:10px">Email Terdaftar</h4>
+          <p style="margin-bottom:8px"><strong>Email:</strong> ${val}</p>
+          <p style="font-size:14px;color:#64748b">Langkah selanjutnya: Buka email kamu, cari pesan verifikasi, lalu salin link-nya dan tempel di kolom di atas.</p>
+        `;
+      }else if(val.startsWith('http')){
+        currentStage = 3;
+        updateStages(3);
+        updateResponse('success', 'Berhasil Diaktifkan!', 'Selamat! Akun AM kamu sekarang sudah Premium');
+        resultPanel.setAttribute('data-state', 'filled');
+        resultPanel.innerHTML = `
+          <h4 style="color:#16a34a;margin-bottom:10px">Premium Aktif!</h4>
+          <p style="margin-bottom:8px">Link verifikasi berhasil diproses.</p>
+          <p style="font-size:14px;color:#64748b">Akses premium Alight Motion kamu sudah aktif. Buka aplikasi AM kamu dan nikmati semua fitur premium secara gratis!</p>
+        `;
+      }else{
+        updateResponse('error', 'Format tidak dikenali', 'Masukkan alamat email atau link verifikasi yang valid');
+        showToast('Format tidak valid, silakan coba lagi');
+      }
+    }, 1500);
+  });
+});
+</script>
+
+</body>
+</html>
+
   
