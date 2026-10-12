@@ -1,1 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Cimel — AM Premium</title>
+<meta name="description" content="Kirim email dan verifikasi link AM, akun jadi premium secara gratis!" />
+<meta name="theme-color" content="#2563eb" />
 
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --biru-utama: #2563eb;
+  --biru-soft: #60a5fa;
+  --biru-pudar: #dbeafe;
+  --putih: #ffffff;
+  --abu-terang: #f0f7ff;
+  --abu-teks: #334155;
+  --abu-pudar: #94a3b8;
+  --sukses: #16a34a;
+  --gagal: #dc2626;
+  --bayangan: 0 8px 32px rgba(37, 99, 235, 0.12);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Fredoka', sans-serif;
+  background:linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+  color:var(--abu-teks);
+  line-height:1.6;
+  min-height:100vh;
+}
+
+.intro-layer{
+  position:fixed;inset:0;background:var(--biru-utama);z-index:9999;
+  animation:fadeOut 1.2s ease forwards;
+}
+@keyframes fadeOut{
+  0%{opacity:1}70%{opacity:1}100%{opacity:0;pointer-events:none}
+}
+
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(37,99,235,.25);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:20px;z-index:100;
+  opacity:0;visibility:hidden;transition:.3s ease;
+}
+.modal-overlay[open],.modal-overlay:not([hidden]){
+  opacity:1;visibility:visible;
+}
+.modal-card{
+  background:var(--putih);border-radius:20px;padding:28px 24px;max-width:440px;width:100%;
+  box-shadow:var(--bayangan);border:1px solid var(--biru-pudar);position:relative;
+  transform:translateY(10px);opacity:0;transition:.3s ease .1s;
+}
+.modal-overlay:not([hidden]) .modal-card{transform:translateY(0);opacity:1}
+.modal-x{
+  position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;
+  color:var(--abu-pudar);display:flex;transition:.2s;
+}
+.modal-x:hover{color:var(--biru-utama)}
+.modal-eyebrow{
+  display:flex;align-items:center;gap:8px;color:var(--biru-utama);font-weight:600;
+  font-size:14px;margin-bottom:12px;
+}
+.modal-title{font-size:22px;line-height:1.3;margin-bottom:16px;color:var(--biru-utama)}
+.modal-body{font-size:15px;color:var(--abu-teks);margin-bottom:24px;line-height:1.7}
+.modal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.btn{
+  padding:12px 22px;border-radius:12px;font-family:inherit;font-weight:600;font-size:15px;
+  border:none;cursor:pointer;transition:.2s ease;text-decoration:none;display:inline-flex;
+  align-items:center;gap:8px;
+}
+.btn-primary{background:var(--biru-utama);color:var(--putih)}
+.btn-primary:hover{background:#1d4ed8;transform:translateY(-1px)}
+.btn-secondary{background:var(--biru-pudar);color:var(--biru-utama)}
+.btn-secondary:hover{background:#bfdbfe}
+.btn-ghost{
+  background:none;color:var(--abu-pudar);padding:8px 16px;font-size:14px;margin-top:4px;
+}
+.btn-ghost:hover{color:var(--biru-utama)}
+
+.site-header{
+  position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--biru-pudar);padding:14px 5%;z-index:50;
+}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.brand{
+  display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--biru-utama);
+  font-weight:700;font-size:20px;
+}
+.brand-mark{
+  width:40px;height:40px;background:linear-gradient(135deg,var(--biru-utama),var(--biru-soft));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;
+  font-size:18px;font-weight:700;
+}
+.nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer}
+.nav-line{width:24px;height:2px;background:var(--biru-utama);border-radius:2px}
+.site-nav{display:flex;gap:28px}
+.site-nav a{
+  text-decoration:none;color:var(--abu-teks);font-weight:500;font-size:15px;
+  transition:.2s;position:relative;
+}
+.site-nav a:hover{color:var(--biru-utama)}
+.site-nav a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;
+  background:var(--biru-utama);transition:.25s ease;
+}
+.site-nav a:hover::after{width:100%}
+
+main{max-width:720px;margin:0 auto;padding:40px 5% 80px}
+.section{margin-bottom:80px}
+.section-head{text-align:center;margin-bottom:40px}
+.section-tag{
+  display:inline-block;background:var(--biru-pudar);color:var(--biru-utama);
+  padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;
+  margin-bottom:12px;
+}
+.section-title{font-size:32px;color:var(--biru-utama)}
+
+.status-pill{
+  display:inline-flex;align-items:center;gap:8px;background:rgba(22,163,74,.08);
+  color:var(--sukses);padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;
+  margin-bottom:24px;
+}
+.status-dot{animation:pulse 2s infinite;font-size:18px;line-height:1}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.hero{text-align:center;margin-bottom:50px}
+.hero-title{
+  font-size:clamp(32px,7vw,48px);line-height:1.15;color:var(--biru-utama);
+  margin-bottom:24px;
+}
+.am-badge{
+  display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--biru-utama),var(--biru-soft));
+  color:white;padding:6px 16px;border-radius:14px;font-size:0.72em;vertical-align:middle;
+  margin:0 6px;
+}
+.hero-desc{font-size:16px;max-width:540px;margin:0 auto;color:var(--abu-teks);opacity:.8}
+
+.app-card{
+  background:var(--putih);border-radius:24px;padding:32px;box-shadow:var(--bayangan);
+  border:1px solid var(--biru-pudar);
+}
+.stages{display:flex;justify-content:space-between;margin-bottom:32px;position:relative}
+.stages::before{
+  content:'';position:absolute;top:18px;left:12%;right:12%;height:2px;
+  background:var(--biru-pudar);z-index:0;
+}
+.stage{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;text-align:center;flex:1}
+.stage-ico{
+  width:38px;height:38px;border-radius:50%;border:2px solid var(--biru-pudar);
+  display:flex;align-items:center;justify-content:center;background:white;color:var(--biru-pudar);
+  transition:.3s ease;
+}
+.stage.active .stage-ico{
+  border-color:var(--biru-utama);background:var(--biru-utama);color:white;
+}
+.stage.done .stage-ico{
+  border-color:var(--sukses);background:var(--sukses);color:white;
+}
+.stage-label{font-size:12px;color:var(--abu-pudar);max-width:90%}
+
+.input-wrap{
+  position:relative;margin-bottom:24px;
+}
+#main-input{
+  width:100%;padding:16px 52px 16px 20px;border:2px solid var(--biru-pudar);
+  border-radius:14px;font-family:inherit;font-size:15px;color:var(--abu-teks);
+  background:var(--abu-terang);transition:.25s ease;
+}
+#main-input:focus{outline:none;border-color:var(--biru-utama);background:white}
+#main-input::placeholder{color:var(--abu-pudar)}
+.input-action{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--biru-utama);cursor:pointer;padding:6px;
+  display:flex;transition:.2s;
+}
+.input-action:hover{opacity:.7}
+.input-action [data-icon]{display:none}
+.input-action[data-mode="clipboard"] [data-icon="clipboard"]{display:block}
+.input-action[data-mode="clear"] [data-icon="x"]{display:block}
+
+.exec-btn{
+  width:100%;padding:16px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--biru-utama),var(--biru-soft));
+  color:white;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:.25s ease;
+  margin-bottom:24px;
+}
+.exec-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(37,99,235,.25)}
+.exec-btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
+.exec-ico-load{animation:spin 1s linear infinite;display:none}
+.exec-btn[aria-busy="true"] .exec-ico-bolt{display:none}
+.exec-btn[aria-busy="true"] .exec-ico-load{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.response-panel{
+  padding:18px;border-radius:12px;background:var(--abu-terang);border:1px solid var(--biru-pudar);
+  display:flex;gap:14px;align-items:flex-start;transition:.3s ease;
+}
+.response-panel[data-state="empty"]{opacity:.7}
+.response-panel[data-state="success"]{
+  background:rgba(22,163,74,.06);border-color:var(--sukses);
+}
+.response-panel[data-state="error"]{
+  background:rgba(220,38,38,.05);border-color:var(--gagal);
+}
+.resp-ico{color:var(--biru-utama);flex-shrink:0;margin-top:2px}
+.response-panel[data-state="success"] .resp-ico{color:var(--sukses)}
+.response-panel[data-state="error"] .resp-ico{color:var(--gagal)}
+.resp-text{font-weight:500;font-size:15px;margin-bottom:2px}
+.resp-sub{font-size:13px;color:var(--abu-pudar)}
+
+.result-panel{
+  background:var(--putih);border-radius:16px;padding:24px;border:1px solid var(--biru-pudar);
+  min-height:80px;
+}
+.result-empty{color:var(--abu-pudar);text-align:center;padding:20px}
+
+.steps{list-style:none;counter-reset:step}
+.step{
+  display:flex;gap:20px;padding:24px 0;border-bottom:1px solid var(--biru-pudar);opacity:.4;
+  transform:translateY(8px);transition:.5s ease;
+}
+.step.reveal{opacity:1;transform:translateY(0)}
+.step:last-child{border-bottom:none}
+.step-n{
+  font-size:32px;font-weight:700;color:var(--biru-pudar);line-height:1;min-width:40px;
+}
+.step-body p{font-size:15px;color:var(--abu-teks);line-height:1.8}
+
+.faq-list{display:flex;flex-direction:column;gap:12px}
+.faq-item{
+  background:var(--putih);border:1px solid var(--biru-pudar);border-radius:14px;
+  overflow:hidden;
+}
+.faq-item summary{
+  list-style:none;padding:18px 22px;cursor:pointer;display:flex;align-items:center;
+  gap:12px;font-weight:600;color:var(--biru-utama);
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-q{flex:1;text-align:left;font-size:15px}
+.faq-chev{transition:.25s ease;flex-shrink:0}
+.faq-item[open] .faq-chev{transform:rotate(180deg)}
+.faq-a{padding:0 22px 18px 56px;font-size:14px;color:var(--abu-teks);opacity:.8;line-height:1.7}
+
+.site-footer{text-align:center;padding:30px 5%;font-size:14px;color:var(--abu-pudar)}
+
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--putih);color:var(--abu-teks);padding:14px 22px;border-radius:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);border:1px solid var(--biru-pudar);
+  display:flex;align-items:center;gap:10px;z-index:200;opacity:0;transition:.3s ease;
+  max-width:90%;
+}
+.toast:not([hidden]){opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-ico{color:var(--gagal);flex-shrink:0}
+
+@media(max-width:640px){
+  .site-nav{position:fixed;top:60px;right:5%;background:white;box-shadow:0 8px 24px rgba(0,0,0,.1);
+    border-radius:12px;flex-direction:column;padding:16px;gap:16px;min-width:160px;
+    opacity:0;visibility:hidden;transform:translateY(-10px);transition:.2s ease;
+  }
+  .site-nav[open]{opacity:1;visibility:visible;transform:translateY(0)}
+  .nav-toggle{display:flex}
+  .app-card{padding:24px 20px}
+  .modal-card{padding:24px 18px}
+  .section-title{font-size:24px}
+  .stages::before{left:18px;right:18px}
+}
+</style>
+</head>
+
+<body>
+<div class="intro-layer" id="intro-layer" aria-hidden="true"></div>
+
+<div class="modal-overlay" id="welcome-modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <button class="modal-x" id="modal-x" aria-label="Tutup">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6">
+        <path d="M5 5l14 14M19 5L5 19"/>
+      </svg>
+    </button>
+
+    <div class="modal-eyebrow">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 8v.01M11 12h1v4h1"/>
+      </svg>
+      INFO
+    </div>
+
+    <h2 id="welcome-title" class="modal-title">Selamat datang di Cimel AM Premium</h2>
+    <p class="modal-body">
+      Sebelum memulai, silakan baca panduan di bagian Tutorial agar mengetahui cara kerjanya dengan benar.
+      <br><br>
+      Jangan lupa ikuti channel untuk info terbaru dan pembaruan ya!
+    </p>
+
+    <div class="modal-actions">
+      <a class="btn btn-primary" href="https://whatsapp.com/channel/0029VbCN4sQLo4hhDCkOHX1m" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4">
+          <path d="M4 20l1.6-4A8 8 0 1 1 8 18.4L4 20z"/>
+        </svg>
+        Channel WhatsApp
+      </a>
+      <button class="btn btn-secondary" id="btn-read-tutorial">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4">
+          <path d="M4 5h7a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H4z"/>
+          <path d="M20 5h-7a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h8z"/>
+        </svg>
+        Baca Tutorial
+      </button>
+    </div>
+
+    <button class="btn btn-ghost" id="btn-dismiss">Tutup</button>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#home" class="brand" aria-label="Cimel AM Premium">
+      <span class="brand-mark">C</span>
+      <span class="brand-title">CIMEL AM PREMIUM</span>
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+      <span class="nav-line"></span>
+      <span class="nav-line"></span>
+    </button>
+    <nav class="site-nav" id="site-nav">
+      <a href="#home" data-nav>Beranda</a>
+      <a href="#result" data-nav>Hasil</a>
+      <a href="#tutorial" data-nav>Tutorial</a>
+      <a href="#faq" data-nav>FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="home" class="section hero">
+    <span class="status-pill">
+      <span class="status-dot" aria-hidden="true">●</span>
+      Gratis • Tanpa Biaya • Tanpa Iklan
+    </span>
+    <h1 class="hero-title">
+      Aktifkan Akun
+      <span class="am-badge">AM Premium</span>
+      Secara Gratis
+    </h1>
+    <p class="hero-desc">
+      Masukkan email kamu, lalu buka link verifikasi dari inbox email, salin link tersebut,
+      dan tempel di sini untuk mengaktifkan akses premium Alight Motion kamu.
+    </p>
+  </section>
+
+  <section class="section app-wrap" id="app">
+    <div class="app-card">
+      <div class="stages" role="list">
+        <div class="stage" data-stage="1" role="listitem">
+          <span class="stage-ico" data-ico="idle">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4">
+              <circle cx="12" cy="12" r="9"/>
+            </svg>
+          </span>
+          <span class="stage-label">Masukkan Email</span>
+        </div>
+        <div class="stage" data-stage="2" role="listitem">
+          <span class="stage-ico" data-ico="idle">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4">
+              <circle cx="12" cy="12" r="9"/>
+            </svg>
+          </span>
+          <span class="stage-label">Verifikasi Link</span>
+        </div>
+        <div class="stage" data-stage="3" role="listitem">
+          <span class="stage-ico" data-ico="idle">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4">
+              <circle cx="12" cy="12" r="9"/>
+            </svg>
+          </span>
+          <span class="stage-label">Selesai!</span>
+        </div>
+      </div>
+
+      <div class="input-wrap">
+        <input id="main-input" type="text" inputmode="text" autocomplete="off" autocapitalize="off"
+               spellcheck="false" placeholder="Masukkan email atau link verifikasi di sini..." aria-label="Input" />
+        <button class="input-action" id="input-action" aria-label="Hapus" data-mode="clipboard">
+          <svg data-icon="clipboard" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="8" y="4" width="10" height="16" rx="2"/>
+            <path d="M10 4V3a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <svg data-icon="x" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </div>
+
+      <button class="exec-btn" id="exec-btn">
+        <span class="exec-ico-wrap">
+          <svg class="exec-ico exec-ico-bolt" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M13 2 4 14h6l-1 8 9-12h-6z"/>
+          </svg>
+          <svg class="exec-ico exec-ico-load" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+            <path d="M12 3a9 9 0 1 0 9 9"/>
+          </svg>
+        </span>
+        <span class="exec-text" data-text-idle="Proses Sekarang" data-text-busy="Sedang Diproses...">Proses Sekarang</span>
+      </button>
+
+      <div class="response-panel" id="response-panel" data-state="empty" aria-live="polite">
+        <div class="resp-ico">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 8v.01M11 12h1v4h1"/>
+          </svg>
+        </div>
+        <div class="resp-body">
+          <p class="resp-text" id="resp-text">Silakan masukkan email atau link verifikasi di atas</p>
+          <p class="resp-sub" id="resp-sub"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="section">
+    <div class="section-head">
+      <span class="section-tag">HASIL</span>
+      <h2 class="section-title">Hasil Proses</h2>
+    </div>
+    <div class="result-panel" id="result-panel" data-state="empty">
+      <p class="result-empty">Belum ada hasil. Mulai proses di atas dulu ya!</p>
+    </div>
+  </section>
+
+  <section id="tutorial" class="section">
+    <div class="section-head">
+      <span class="section-tag">PANDUAN</span>
+      <h2 class="section-title">Cara Menggunakan</h2>
+    </div>
+
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step-ico">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="5" width="18" height="14" rx="2"/>
+            <path d="M3 7l9 6 9-6"/>
+          </svg>
+        </span>
+        <div class="step-body">
+          <span class="step-n">01</span>
+          <p>Masukkan email yang terdaftar di Alight Motion ke kolom input, lalu klik tombol Proses Sekarang.</p>
+        </div>
+      </li>
+      <li class="step reveal">
+        <span class="step-ico">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/>
+            <circle cx="12" cy="11" r="2.5"/>
+          </svg>
+        </span>
+        <div class="step-body">
+          <span class="step-n">02</span>
+          <p>Cek inbox email kamu. Jika tidak ada, periksa folder Spam atau Promosi.</p>
+        </div>
+      </li>
+      <li class="step reveal">
+        <span class="step-ico">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="8" y="4" width="8" height="16" rx="2"/>
+            <path d="M10 4v2h4V4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1z"/>
+          </svg>
+        </span>
+        <div class="step-body">
+          <span class="step-n">03</span>
+          <p>Buka email tersebut, klik link verifikasi, lalu salin seluruh link yang terbuka.</p>
+        </div>
+      </li>
+      <li class="step reveal">
+        <span class="step-ico">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+            <path d="m4 12 5 5L20 6"/>
+          </svg>
+        </span>
+        <div class="step-body">
+  
